@@ -1,0 +1,29 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!mvnw
+!mvnw.cmd
+
+### Environment variables ###
+.env
+*.env
+
+### Logs ###
+*.log
+
+### OS specific ###
+.DS_Store
+Thumbs.db
+
+### IDE files ###
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+*.swp
+*.swo
+
+### Build tools / Scratch ###
+bin/
+scratch/
