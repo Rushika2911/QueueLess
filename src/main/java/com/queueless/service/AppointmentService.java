@@ -16,8 +16,10 @@ import com.queueless.exception.SlotUnavailableException;
 import com.queueless.exception.UnauthorizedResourceAccessException;
 import com.queueless.repository.*;
 import com.queueless.security.CustomUserDetails;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -49,7 +51,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public AppointmentResponse bookAppointment(CreateAppointmentRequest request, CustomUserDetails currentUser) {
+    public synchronized AppointmentResponse bookAppointment(CreateAppointmentRequest request, CustomUserDetails currentUser) {
         if (currentUser == null) {
             throw new UnauthorizedResourceAccessException("Authentication required to book an appointment");
         }
@@ -121,8 +123,12 @@ public class AppointmentService {
                 AppointmentStatus.BOOKED
         );
 
-        Appointment saved = appointmentRepository.save(appointment);
-        return AppointmentResponse.fromEntity(saved);
+        try {
+            Appointment saved = appointmentRepository.save(appointment);
+            return AppointmentResponse.fromEntity(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new SlotUnavailableException("The requested appointment slot is no longer available");
+        }
     }
 
     @Transactional
