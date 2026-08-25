@@ -11,4 +11,5 @@ public class QueueLessApplication {
     public static void main(String[] args) {
         SpringApplication.run(QueueLessApplication.class, args);
     }
+
 }
