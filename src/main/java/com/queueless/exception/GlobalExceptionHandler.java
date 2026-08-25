@@ -41,6 +41,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    @ExceptionHandler(InvalidQueueTransitionException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidQueueTransition(InvalidQueueTransitionException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "INVALID_QUEUE_TRANSITION",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(QueueConflictException.class)
+    public ResponseEntity<ErrorResponse> handleQueueConflict(QueueConflictException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "QUEUE_CONFLICT",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(InvalidAppointmentException.class)
     public ResponseEntity<ErrorResponse> handleInvalidAppointment(InvalidAppointmentException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
